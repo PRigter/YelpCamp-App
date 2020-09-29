@@ -1,5 +1,5 @@
 #YelpCamp App 
-Based on "The Web Developer Bootcamp - By Colt Steele"
+Based on "The Web Developer Bootcamp" Udemy Course By Colt Steele
 
 * Add Landing Page
 * Add Campgrounds Page that lists all campgrounds

@@ -17,14 +17,33 @@ mongoose.connect("mongodb://127.0.0.1/yelp_camp", {
 // DB SCHEMA SETUP
 const campgroundSchema = new mongoose.Schema({
     name: String,
-    image: String
+    image: String,
+    description: String
 })
 
 const Campground = mongoose.model("Campground", campgroundSchema)
 
+// Manual DATA
+// Campground.create(
+//     {
+//         name: "Granite Hill",
+//         image: "https://images.pexels.com/photos/1230302/pexels-photo-1230302.jpeg?auto=compress&cs=tinysrgb&h=350",
+//         description: "This is a huge granite hill, no bathrooms. No water. Beatifull granite!"
+//     },
+//     function(err, campground) {
+//         if (err) {
+//             console.log(err)
+//         } else {
+//             console.log("Newly created campground")
+//             console.log(campground)
+//         }
+//  })
 
 
-// ROUTES
+
+
+
+// --- ROUTES
 
 app.get("/", function(req, res) {
     res.render("landing")
@@ -37,7 +56,7 @@ app.get("/campgrounds", function(req, res) {
         if (err) {
             console.log(err)
         } else {
-            res.render("campgrounds", { campgrounds: allCampgrounds })
+            res.render("index", { campgrounds: allCampgrounds })
         }
     })
 
@@ -47,7 +66,8 @@ app.get("/campgrounds", function(req, res) {
 app.post("/campgrounds", function(req, res) {
     let newCampName = req.body.newCampName
     let newCampImage = req.body.newCampImage
-    let newCampground = { name: newCampName, image: newCampImage }
+    let newCampDescription = req.body.newCampDescription
+    let newCampground = { name: newCampName, image: newCampImage, description: newCampDescription }
     console.log(newCampground)
     // campgrounds.push(newCampground)
     // Create a New Campground and save to DB
@@ -65,10 +85,19 @@ app.get("/campgrounds/new", function(req, res) {
     res.render("newCampground")
 })
 
-// SHOW - Shows info about one item ***** ATENÇÃO *** -> Esta route tem que ser colocada ABAIXO da route "/campgrounds/new"
+// SHOW - Shows more info about one item ***** ATENÇÃO *** -> Esta route tem que ser colocada ABAIXO da route "/campgrounds/new"
     // Caso contrário a route "/campgrounds/new" será considerada como parametro que estamos a definir na route abaixo --> /campgrounds/:id"
 app.get("/campgrounds/:id", function(req, res) {
-    res.send("This will be the Show page one day")
+    const campgroundId = req.params.id
+    Campground.findById(campgroundId, function(err, foundCampground) {
+        if (err) {
+            console.log(err)
+        } else {
+            res.render("show", { campground: foundCampground })
+        }
+    })
+
+    
 })
 
 
